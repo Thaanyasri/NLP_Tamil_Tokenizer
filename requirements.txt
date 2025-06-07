@@ -58,7 +58,7 @@ Pygments==2.19.1
 pymongo==4.12.0
 pyngrok==7.2.3
 pyparsing==3.2.0
-pypiwin32==223
+pywin32==306
 python-dateutil==2.9.0.post0
 python-dotenv==1.0.1
 pyttsx3==2.98
