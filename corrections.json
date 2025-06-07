@@ -1,0 +1,64 @@
+import json
+
+def transform_text(inplines):
+    res = []
+    n = len(inplines)
+    i = 0
+    while i < n:
+        line = inplines[i].strip()
+        if line.startswith("#"):
+            item = {"text": line[9:], "tokens": []}
+            i += 1
+            while i < n and not inplines[i].startswith("#"):
+                line = inplines[i].strip()
+                if not line:
+                    i += 1
+                    continue
+
+                if '-' not in line.split('\t')[0]:
+                    word = line.split('\t')[1]
+                    token = {
+                        "id": line.split('\t')[0],
+                        "word": word,
+                        "split_words": [word, " "]
+                    }
+                    item["tokens"].append(token)
+                else:
+                    id_range = line.split('\t')[0]
+                    word = line.split('\t')[1]
+                    start, end = map(int, id_range.split('-'))
+                    token = {
+                        "id": id_range,
+                        "word": word,
+                        "split_words": []
+                    }
+                    i += 1
+                    for _ in range(start, end + 1):
+                        if i >= n or inplines[i].startswith("#"):
+                            break
+                        split_line = inplines[i].strip()
+                        split_word = split_line.split('\t')[1]
+                        token["split_words"].append(split_word)
+                        i += 1
+                    item["tokens"].append(token)
+                    continue  # skip i increment below since it's handled
+
+                i += 1
+            res.append(item)
+        else:
+            i += 1
+    return res
+
+def generate_json(input_path, output_path):
+    with open(input_path, encoding="utf-8", errors="ignore") as file:
+        lines = file.readlines()
+
+    transformed_data = transform_text(lines)
+
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(transformed_data, f, ensure_ascii=False, indent=2)
+
+    print(f"✅ JSON saved to {output_path}")
+
+# Run this with your file path
+generate_json("filtered_output_file.txt", "corrections.json")
