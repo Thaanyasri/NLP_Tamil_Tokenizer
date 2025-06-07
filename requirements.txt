@@ -93,7 +93,7 @@ torchaudio==2.6.0
 torchvision==0.21.0
 tqdm==4.67.1
 transformers==4.49.0
-typer==0.15.2
+# typer==0.15.2 --hash=sha256:...
 typing_extensions==4.12.2
 tzdata==2025.1
 tzlocal==5.3.1
